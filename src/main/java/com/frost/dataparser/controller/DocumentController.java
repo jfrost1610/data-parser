@@ -1,0 +1,64 @@
+/**
+ * 
+ */
+package com.frost.dataparser.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.frost.dataparser.model.DocumentDetails;
+import com.frost.dataparser.service.DocumentService;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * @author jobin
+ *
+ */
+@Slf4j
+@RestController
+@RequestMapping("/document")
+public class DocumentController {
+
+	@Autowired
+	private DocumentService documentService;
+
+	@PutMapping
+	public @ResponseBody ResponseEntity<String> addData(
+			@RequestHeader(value = "fileType", required = true) String fileType,
+			@RequestBody DocumentDetails documentDetails) {
+
+		log.info("Starting to add Data.");
+
+		documentService.addDataToDocument(documentDetails);
+
+		log.info("Completed to add Data.");
+
+		return ResponseEntity.status(HttpStatus.OK).body("Added data to document.");
+
+	}
+
+	@PostMapping
+	public @ResponseBody ResponseEntity<String> updateData(
+			@RequestHeader(value = "fileType", required = true) String fileType,
+			@RequestBody DocumentDetails documentDetails) {
+
+		log.info("Starting to add Data.");
+
+		documentService.updateDataOnDocument(documentDetails);
+
+		log.info("Completed to update Data.");
+
+		return ResponseEntity.status(HttpStatus.OK).body("Updated data to document.");
+
+	}
+
+}

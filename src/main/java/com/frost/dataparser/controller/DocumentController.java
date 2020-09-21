@@ -3,9 +3,12 @@
  */
 package com.frost.dataparser.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.frost.dataparser.model.DocumentDetails;
+import com.frost.dataparser.model.Documents;
 import com.frost.dataparser.service.DocumentService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +62,19 @@ public class DocumentController {
 		log.info("Completed to update Data.");
 
 		return ResponseEntity.status(HttpStatus.OK).body("Updated data to document.");
+
+	}
+
+	@GetMapping
+	public @ResponseBody ResponseEntity<Documents> readData() throws IOException {
+
+		log.info("Starting to read Data.");
+
+		Documents documents = documentService.getAllData();
+
+		log.info("Completed to Fetch all Data.");
+
+		return ResponseEntity.status(HttpStatus.OK).body(documents);
 
 	}
 

@@ -15,6 +15,12 @@ import com.frost.dataparser.model.DocumentDetails;
 public class XMLWriter implements DataWriter {
 
 	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public boolean write(DocumentDetails document) {
 		return false;
 	}
@@ -26,9 +32,9 @@ public class XMLWriter implements DataWriter {
 	}
 
 	@Override
-	public void initialize() {
+	public DocumentDetails readAll() {
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 	@Override

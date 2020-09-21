@@ -1,9 +1,12 @@
 package com.frost.dataparser.service;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.frost.dataparser.model.DocumentDetails;
+import com.frost.dataparser.model.Documents;
 import com.frost.dataparser.writer.DataWriterFactory;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,14 @@ public class DocumentService {
 		log.info("Getting Writer!");
 		boolean status = writerFactory.getWriter(documentDetails.getType()).update(documentDetails);
 		log.info("Update Data to Document status : {}", status);
+	}
+
+	public Documents getAllData() throws IOException {
+		log.info("Getting all Data!");
+		DocumentDetails csvDocument = writerFactory.getWriter("CSV").readAll();
+		DocumentDetails xmlDocument = null;//writerFactory.getWriter("XML").readAll();
+		log.info("Fetched all file data");
+		return new Documents(csvDocument, xmlDocument);
 	}
 
 }

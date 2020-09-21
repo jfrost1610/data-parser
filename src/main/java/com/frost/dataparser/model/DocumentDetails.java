@@ -14,10 +14,8 @@ import lombok.Data;
 @Data
 public class DocumentDetails {
 
-	private boolean exists;
-	private String name;
-	private String type;
 	private int size;
-	private String userId;
+	private String type;
 	private List<DataModel> datas;
+	private List<String> headers;
 }

@@ -21,4 +21,6 @@ public interface DataWriter {
 
 	String getFilePath();
 
+	DocumentDetails readAll() throws IOException;
+
 }

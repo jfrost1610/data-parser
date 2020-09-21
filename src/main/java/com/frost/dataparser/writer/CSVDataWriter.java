@@ -7,12 +7,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.frost.dataparser.model.DataModel;
@@ -30,8 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service("CSV")
 public class CSVDataWriter implements DataWriter {
 
-	@Autowired
-	private Environment env;
+	@Value("${storage.path}")
+	private String storagePath;
 
 	@PostConstruct
 	@Override
@@ -79,6 +80,38 @@ public class CSVDataWriter implements DataWriter {
 			log.error("Failed to update Data to CSV due to an exception!", e);
 			return false;
 		}
+	}
+
+	@Override
+	public DocumentDetails readAll() throws IOException {
+
+		File dataFile = new File(getFilePath());
+		DocumentDetails documents = new DocumentDetails();
+		documents.setType("CSV");
+
+		List<DataModel> dataModels = new ArrayList<>();
+
+		try (CSVReader reader = new CSVReader(new FileReader(dataFile))) {
+
+			String[] metaData = reader.readNext();
+			documents.setSize(Integer.parseInt(metaData[0]));
+
+			String[] headers = reader.readNext();
+			documents.setHeaders(Arrays.asList(headers));
+
+			String[] nextRecord;
+
+			while ((nextRecord = reader.readNext()) != null) {
+				DataModel dataModel = new DataModel(nextRecord[0], nextRecord[1], nextRecord[2], nextRecord[3]);
+				dataModels.add(dataModel);
+			}
+
+			documents.setDatas(dataModels);
+
+		}
+
+		return documents;
+
 	}
 
 	private void appendData(DocumentDetails document) throws IOException {
@@ -151,7 +184,7 @@ public class CSVDataWriter implements DataWriter {
 
 	@Override
 	public String getFilePath() {
-		return env.getRequiredProperty("STORAGE_PATH") + "/datafile.csv";
+		return storagePath + "/datafile.csv";
 	}
 
 }
